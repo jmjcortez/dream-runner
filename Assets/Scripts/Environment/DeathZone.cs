@@ -6,7 +6,7 @@ public class DeathZone : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            LevelManager.instance.HandleGameOver();
+            StartCoroutine(LevelManager.instance.HandleGameOver(1));
         }
     }
 }

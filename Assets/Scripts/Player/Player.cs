@@ -15,8 +15,9 @@ public class Player : MonoBehaviour
     public LayerMask ground;
     public Transform groundCheckPoint;
     public Rigidbody2D playerRigidbody;
-    public bool isFrozen;
+    public bool isFrozen, isRespawning;
 
+    public SpriteRenderer playerSpriteRenderer;
 
     private void Awake() {
         instance = this;
@@ -30,10 +31,30 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        AnimateIdle();
+
         if (!isFrozen) {
             Run();
             JumpLogic();
-            Animate();
+            AnimateJump();
+        }
+
+        else {
+            if (isRespawning && AdManager.instance.isRewardVidPlayed) {
+
+                if (Input.GetMouseButtonDown(0)) {
+
+                    Vector2 clickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                                        
+                    StartCoroutine(RespawnOnPosition(new Vector2(clickedPosition.x, 4)));
+                
+                    AdManager.instance.isRewardVidPlayed = false;
+                    isRespawning = false;
+                    
+                    LevelManager.instance.ResumeGame();
+                }
+            }
+
         }
     }
 
@@ -54,9 +75,6 @@ public class Player : MonoBehaviour
         }
 
         if (Input.GetButtonDown("Jump")) {
-            // if (isGrounded) {
-            //     Jump();
-            // }
             jumpPressedRemember = jumpPressedRememberTime;
         }
 
@@ -71,8 +89,37 @@ public class Player : MonoBehaviour
         playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, jumpPower);
     }
 
-    void Animate() {   
+    void AnimateJump() {   
         animator.SetBool("isGrounded", isGrounded);
+    }
+
+    void AnimateIdle() {
+        animator.SetBool("isFrozen", isFrozen);
+    }
+
+    IEnumerator RespawnOnPosition(Vector3 respawnPoint) {
+        
+        playerSpriteRenderer.enabled = true;
+        playerRigidbody.velocity = Vector2.zero;
+
+        transform.position = respawnPoint;
+
+        CameraController.instance.isFollowingTarget = true;
+
+        LevelManager.instance.PauseGame();
+
+        yield return new WaitForSeconds(1);
+        Debug.Log('3');
+        yield return new WaitForSeconds(1);
+        Debug.Log('2');
+        yield return new WaitForSeconds(1);
+        Debug.Log('1');
+        yield return new WaitForSeconds(1);
+        Debug.Log("GO");
+        
+        LevelManager.instance.ResumeGame();
+
+        isFrozen = false;
     }
 
 }

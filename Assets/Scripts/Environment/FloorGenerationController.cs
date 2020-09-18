@@ -9,7 +9,7 @@ public class FloorGenerationController : MonoBehaviour
 
     public Transform spawnPoint;
 
-    public GameObject obstacleManager;
+    public GameObject obstacleManager, tabManager;
 
     private float floorLength, spawnTime;
 
@@ -31,27 +31,15 @@ public class FloorGenerationController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        // StartCoroutine(MoveFloor()); 
         spawnTime = 3;
         isSpawning = true;
     }
 
-    // IEnumerator MoveFloor() {
-    //     yield return new WaitForSeconds(3);
-
-    //     // gameObject.transform.parent.position = new Vector2(gameObject.transform.parent.position.x + (floorLength * 2) + Random.Range(4,7), gameObject.transform.parent.position.y);
-    //     gameObject.transform.parent.position = new Vector2(spawnPoint.position.x + Random.Range(0,2), spawnPoint.position.y);
-
-    //     obstacleManager.GetComponent<ObstacleSpawnController>().SpawnObstacles();
-
-    // }
-
     void MoveFloor() {
-
-        // gameObject.transform.parent.position = new Vector2(gameObject.transform.parent.position.x + (floorLength * 2) + Random.Range(4,7), gameObject.transform.parent.position.y);
-        gameObject.transform.parent.position = new Vector2(spawnPoint.position.x + Random.Range(0,2), spawnPoint.position.y);
+        gameObject.transform.parent.position = new Vector2(spawnPoint.position.x, spawnPoint.position.y);
 
         obstacleManager.GetComponent<ObstacleSpawnController>().SpawnObstacles();
+        tabManager.GetComponent<TabGenerator>().SpawnTab();
 
     }
 

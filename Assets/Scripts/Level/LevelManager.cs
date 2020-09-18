@@ -7,12 +7,14 @@ public class LevelManager : MonoBehaviour
 {
     private Vector2 startPosition;
 
-    private int distanceTraveled;
+    public int distanceTraveled;
 
     public static LevelManager instance;
 
     public GameObject player;
-    public TextMeshProUGUI odometerDisplay;
+    public TextMeshProUGUI odometerDisplay, centrePrompt, doubleJumpText;
+
+    public int doubleJumpsAvailable;
 
     private int lives = 1;
 
@@ -23,6 +25,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         startPosition = player.transform.position;
+        StartCoroutine(PreStartCountdown());        
     }
 
     void Update()
@@ -31,12 +34,46 @@ public class LevelManager : MonoBehaviour
             distanceTraveled = (int)Vector2.Distance(startPosition, player.transform.position);
     
             UpdateOdometer();
+
+            if (distanceTraveled % 300 == 0 && distanceTraveled > 0 && Player.instance.maxSpeed > Player.instance.initialSpeed) {
+                Player.instance.initialSpeed += 0.1f;
+            }
+        }
+
+        if (Player.instance.isRespawning) {
+            centrePrompt.gameObject.SetActive(true);
+            centrePrompt.text = "TAP A SPOT TO RESPAWN";
         }
         
     }
 
     void UpdateOdometer() {
         odometerDisplay.text = distanceTraveled.ToString();
+    }
+
+    public IEnumerator PreStartCountdown() {
+
+        Player.instance.isFrozen = true;
+
+        centrePrompt.gameObject.SetActive(true);
+        centrePrompt.text = "3";
+
+        yield return new WaitForSeconds(1);
+        centrePrompt.text = "2";
+
+
+        yield return new WaitForSeconds(1);
+        centrePrompt.text = "1";
+
+
+        yield return new WaitForSeconds(1);
+        centrePrompt.text = "RUN";
+        yield return new WaitForSeconds(1);
+        centrePrompt.gameObject.SetActive(false);
+
+
+        Player.instance.isFrozen = false;
+
     }
 
     public IEnumerator HandleGameOver(int waitTime) {
@@ -56,7 +93,7 @@ public class LevelManager : MonoBehaviour
                 lives--;
             }
             else {
-                // LEGIT GAME OVER
+                centrePrompt.text = "GAME OVER";
             }
 
  
@@ -70,5 +107,13 @@ public class LevelManager : MonoBehaviour
     public void ResumeGame ()
     {
         Time.timeScale = 1;
+    }
+
+    public void UpdateDoubleJumpText() {
+        doubleJumpText.text = "DOUBLE JUMPS X " + doubleJumpsAvailable.ToString();
+    }
+
+    public void RestartStage() {
+        // pwedeng reload scene nalang?
     }
 }

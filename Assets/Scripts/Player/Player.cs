@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 
     public static Player instance;
 
-    public float initialSpeed, jumpPower;
+    public float initialSpeed, jumpPower, maxSpeed;
     public LayerMask ground;
     public Transform groundCheckPoint;
     public Rigidbody2D playerRigidbody;
@@ -46,8 +46,8 @@ public class Player : MonoBehaviour
 
                     Vector2 clickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                                         
-                    StartCoroutine(RespawnOnPosition(new Vector2(clickedPosition.x, 4)));
-                
+                    RespawnOnPosition(new Vector2(clickedPosition.x, 4));
+
                     AdManager.instance.isRewardVidPlayed = false;
                     isRespawning = false;
                     
@@ -76,6 +76,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Jump")) {
             jumpPressedRemember = jumpPressedRememberTime;
+
+            if (!isGrounded && LevelManager.instance.doubleJumpsAvailable > 0) {
+                LevelManager.instance.doubleJumpsAvailable -= 1;
+                LevelManager.instance.UpdateDoubleJumpText();
+                jumpPressedRemember = 0;
+                groundedRemember = 0;
+                Jump();
+            }
         }
 
         if (jumpPressedRemember > 0 && groundedRemember > 0) {
@@ -87,6 +95,7 @@ public class Player : MonoBehaviour
 
     void Jump() {
         playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, jumpPower);
+
     }
 
     void AnimateJump() {   
@@ -97,7 +106,7 @@ public class Player : MonoBehaviour
         animator.SetBool("isFrozen", isFrozen);
     }
 
-    IEnumerator RespawnOnPosition(Vector3 respawnPoint) {
+    void RespawnOnPosition(Vector3 respawnPoint) {
         
         playerSpriteRenderer.enabled = true;
         playerRigidbody.velocity = Vector2.zero;
@@ -106,20 +115,8 @@ public class Player : MonoBehaviour
 
         CameraController.instance.isFollowingTarget = true;
 
-        LevelManager.instance.PauseGame();
+        StartCoroutine(LevelManager.instance.PreStartCountdown());
 
-        yield return new WaitForSeconds(1);
-        Debug.Log('3');
-        yield return new WaitForSeconds(1);
-        Debug.Log('2');
-        yield return new WaitForSeconds(1);
-        Debug.Log('1');
-        yield return new WaitForSeconds(1);
-        Debug.Log("GO");
-        
-        LevelManager.instance.ResumeGame();
-
-        isFrozen = false;
     }
 
 }

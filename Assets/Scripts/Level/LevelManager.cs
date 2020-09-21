@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
     private Vector2 startPosition;
+    private int lives = 1;
+
 
     public int distanceTraveled;
 
@@ -16,7 +19,9 @@ public class LevelManager : MonoBehaviour
 
     public int doubleJumpsAvailable;
 
-    private int lives = 1;
+    public RawImage gameOverPrompt;
+
+    public Transform gameOverPromptTarget;
 
     private void Awake() {
         instance = this;
@@ -81,22 +86,27 @@ public class LevelManager : MonoBehaviour
             if (lives > 0) {
                 yield return new WaitForSeconds(waitTime);
 
-                Player.instance.playerRigidbody.velocity = new Vector2(0, Player.instance.playerRigidbody.velocity.y);
-                Player.instance.isFrozen = true;
-                Player.instance.isRespawning = true;
-                Player.instance.playerSpriteRenderer.enabled = false;
-
-                CameraController.instance.isFollowingTarget = false;
+                FreezePlayer(true);
 
                 AdManager.instance.PlayRewardedVideoAd();
                 
                 lives--;
             }
             else {
-                centrePrompt.text = "GAME OVER";
+                FreezePlayer(false);
+                PromptGameOver();
             }
 
  
+    }
+
+    public void FreezePlayer(bool isRespawning) {
+        Player.instance.playerRigidbody.velocity = new Vector2(0, Player.instance.playerRigidbody.velocity.y);
+        Player.instance.isFrozen = true;
+        Player.instance.isRespawning = isRespawning;
+        Player.instance.playerSpriteRenderer.enabled = false;
+
+        CameraController.instance.isFollowingTarget = false;
     }
 
     public void PauseGame ()
@@ -113,7 +123,8 @@ public class LevelManager : MonoBehaviour
         doubleJumpText.text = "DOUBLE JUMPS X " + doubleJumpsAvailable.ToString();
     }
 
-    public void RestartStage() {
-        // pwedeng reload scene nalang?
+    public void PromptGameOver() {
+        gameOverPrompt.transform.position = Vector3.MoveTowards(transform.position, gameOverPromptTarget.position, 5 * Time.deltaTime);
     }
+
 }

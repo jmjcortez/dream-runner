@@ -59,7 +59,6 @@ public class Player : MonoBehaviour
     }
 
     void Run() {
-        //papalitan pa to pag may accelerate na
         playerRigidbody.velocity = new Vector2(initialSpeed, playerRigidbody.velocity.y);
     }
 

@@ -7,9 +7,9 @@ public class ObstacleSpawnController : MonoBehaviour
     public Transform[] obstaclePoints, tabSpawnPoints;
     public GameObject[] obstacleChoices, obstacles; 
 
-    public GameObject tab;
+    public GameObject tab, obstacle;
     
-    public float chanceToSpawn;
+    public float chanceToSpawn, chanceToSummonSatan;
 
     public bool inFirstBuilding;
 
@@ -33,13 +33,21 @@ public class ObstacleSpawnController : MonoBehaviour
         for (int i = 0; i < obstaclePoints.Length; i++) {
 
             float spawnSelect = Random.Range(0, 100f);
+            float spawnSelectSatanas = Random.Range(0, 100f);
+
+            if (spawnSelectSatanas <= chanceToSummonSatan) {
+                obstacle = obstacleChoices[1];
+            }
+            else {
+                obstacle = obstacleChoices[0];
+            }
 
             if (inFirstBuilding && i == 0) {
                 continue;
             }
 
             if (spawnSelect <= chanceToSpawn) {
-                obstacles[i] = Instantiate(obstacleChoices[0], obstaclePoints[i].transform.position, obstaclePoints[i].transform.rotation);
+                obstacles[i] = Instantiate(obstacle, obstaclePoints[i].transform.position, obstaclePoints[i].transform.rotation);
             }
         }
     }

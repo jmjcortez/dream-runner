@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.SceneManagement;
 
 public class AdManager : MonoBehaviour, IUnityAdsListener
 {
@@ -63,19 +64,23 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     public void OnUnityAdsDidFinish(string placementId, ShowResult showResult) {
         switch(showResult) {
             case ShowResult.Failed:
+                ReloadScene();
                 break;
             case ShowResult.Skipped:
-                // CHECK if rewarded, skipped game over
+                ReloadScene();
+                break;
             case ShowResult.Finished:
                 if (placementId == rewardedVideoAd) {
                     isRewardVidPlayed = true;
                 }
                 if (placementId == interstitialAd) {
-                    Debug.Log("Finished interstitial");
+                    ReloadScene();
                 }
                 break;
-            // DEFAULT GAME OVER
         }
+    }
+    public void ReloadScene() {
+        SceneManager.LoadScene("GameScene");
     }    
 
 }

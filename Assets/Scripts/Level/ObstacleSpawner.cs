@@ -12,8 +12,6 @@ public class ObstacleSpawner : MonoBehaviour
     void Update() {
         float distanceToPlayer = Vector2.Distance(player.gameObject.transform.position, spawnObstaclePosition);
 
-        // babaan mo pa yung number as in mababa talaga tipong minimum na gap, 
-        // wag 120 tapos lagyan mo ng probability shit kung magsspawn ba or not
         if (distanceToPlayer < 120) {
             SpawnObstacle();
         }

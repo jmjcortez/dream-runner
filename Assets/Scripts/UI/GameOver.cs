@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 public class GameOver : MonoBehaviour
 {
     public void ExitToMainMenu() {
-        AdManager.instance.PlayInterstitialAd();
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void PrepareRewardedAd() {
+        LevelManager.instance.watchAdPrompt.gameObject.SetActive(false);
+        Player.instance.isRespawning = true;
+        AdManager.instance.PlayRewardedVideoAd();
     }
 
 }

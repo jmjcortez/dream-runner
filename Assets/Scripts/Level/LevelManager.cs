@@ -15,11 +15,11 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
 
     public GameObject player;
-    public TextMeshProUGUI odometerDisplay, centrePrompt, doubleJumpText;
+    public TextMeshProUGUI odometerDisplay, centrePrompt, doubleJumpText, currentScore, hiScoreText, adHiScoreText, adCurrentScore;
 
     public int doubleJumpsAvailable;
 
-    public RawImage gameOverPrompt;
+    public RawImage gameOverPrompt, watchAdPrompt;
 
     public Transform gameOverPromptTarget;
 
@@ -54,6 +54,8 @@ public class LevelManager : MonoBehaviour
 
     void UpdateOdometer() {
         odometerDisplay.text = distanceTraveled.ToString();
+        currentScore.text = distanceTraveled.ToString();
+        adCurrentScore.text = distanceTraveled.ToString();
     }
 
     public IEnumerator PreStartCountdown() {
@@ -88,8 +90,10 @@ public class LevelManager : MonoBehaviour
 
                 FreezePlayer(true);
 
-                AdManager.instance.PlayRewardedVideoAd();
-                
+                // AdManager.instance.PlayRewardedVideoAd();
+                PromptAd();
+
+
                 lives--;
             }
             else {
@@ -103,7 +107,7 @@ public class LevelManager : MonoBehaviour
     public void FreezePlayer(bool isRespawning) {
         Player.instance.playerRigidbody.velocity = new Vector2(0, Player.instance.playerRigidbody.velocity.y);
         Player.instance.isFrozen = true;
-        Player.instance.isRespawning = isRespawning;
+        // Player.instance.isRespawning = isRespawning;
         Player.instance.playerSpriteRenderer.enabled = false;
 
         CameraController.instance.isFollowingTarget = false;
@@ -124,7 +128,27 @@ public class LevelManager : MonoBehaviour
     }
 
     public void PromptGameOver() {
-        gameOverPrompt.transform.position = Vector3.MoveTowards(transform.position, gameOverPromptTarget.position, 5 * Time.deltaTime);
+        UpdateHiScore();
+        gameOverPrompt.transform.position = Vector3.MoveTowards(transform.position, gameOverPromptTarget.position, 2 * Time.deltaTime);
+    }
+
+    public void PromptAd() {
+        UpdateHiScore();
+        watchAdPrompt.transform.position = Vector3.MoveTowards(transform.position, gameOverPromptTarget.position, 2 * Time.deltaTime);
+    }
+
+    public void UpdateHiScore() {
+        int hiScore = PlayerPrefs.GetInt("HiScore", 0);
+
+        if (hiScore < distanceTraveled) {
+            hiScore = distanceTraveled;
+            
+            PlayerPrefs.SetInt("HiScore", hiScore);
+
+        }
+
+        hiScoreText.text = hiScore.ToString();
+        adHiScoreText.text = hiScore.ToString();
     }
 
 }

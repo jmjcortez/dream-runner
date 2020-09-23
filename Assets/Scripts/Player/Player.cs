@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public LayerMask ground;
     public Transform groundCheckPoint;
     public Rigidbody2D playerRigidbody;
-    public bool isFrozen, isRespawning;
+    public bool isFrozen, isRespawning, isInvulnerable = false;
 
     public SpriteRenderer playerSpriteRenderer;
 
@@ -106,6 +106,8 @@ public class Player : MonoBehaviour
     }
 
     void RespawnOnPosition(Vector3 respawnPoint) {
+
+        StartCoroutine(MakeInvulnerable(8));
         
         playerSpriteRenderer.enabled = true;
         playerRigidbody.velocity = Vector2.zero;
@@ -116,6 +118,16 @@ public class Player : MonoBehaviour
 
         StartCoroutine(LevelManager.instance.PreStartCountdown());
 
+    }
+
+    IEnumerator MakeInvulnerable(int waitTime) {
+        isInvulnerable = true;
+        playerSpriteRenderer.color = new Color(playerSpriteRenderer.color.r, playerSpriteRenderer.color.g, playerSpriteRenderer.color.b, 0.5f);
+
+        yield return new WaitForSeconds(waitTime);
+
+        playerSpriteRenderer.color = new Color(playerSpriteRenderer.color.r, playerSpriteRenderer.color.g, playerSpriteRenderer.color.b, 1f);
+        isInvulnerable = false;
     }
 
 }

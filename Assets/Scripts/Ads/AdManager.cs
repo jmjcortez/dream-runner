@@ -13,7 +13,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
     private string interstitialAd = "video";
     private string rewardedVideoAd = "rewardedVideo";
 
-    public bool isTargetPlayStore, isTestAd, isRewardVidPlayed;
+    public bool isTargetPlayStore, isTestAd, isRewardVidPlayed, isExitingToMainMenu = false;
 
     private void Awake() {
         instance = this;
@@ -33,8 +33,10 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         Advertisement.Initialize(appStoreId, isTestAd);
     }
 
-    public void PlayInterstitialAd() {
+    public void PlayInterstitialAd(bool willExit=false) {
         // Mute and pause
+
+        isExitingToMainMenu = willExit;
 
         if (Advertisement.IsReady(interstitialAd)) {
             Advertisement.Show(interstitialAd);
@@ -67,20 +69,30 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
                 ReloadScene();
                 break;
             case ShowResult.Skipped:
-                ReloadScene();
+                WatchedInterstitialAdLogic();
                 break;
             case ShowResult.Finished:
                 if (placementId == rewardedVideoAd) {
                     isRewardVidPlayed = true;
                 }
                 if (placementId == interstitialAd) {
-                    ReloadScene();
+                    WatchedInterstitialAdLogic();
                 }
                 break;
         }
     }
+
+    void WatchedInterstitialAdLogic() {
+        if (isExitingToMainMenu) {
+            SceneManager.LoadScene("MainMenu");
+            isExitingToMainMenu = false;
+        }
+        else {
+            ReloadScene();
+        }
+    }
     public void ReloadScene() {
         SceneManager.LoadScene("GameScene");
-    }    
+    }
 
 }

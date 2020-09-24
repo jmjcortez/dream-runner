@@ -7,7 +7,7 @@ public class Pause : MonoBehaviour
 {
     public RawImage pauseMenu;
 
-    public GameObject menus, quitConfirmation;
+    public GameObject menus, quitConfirmation, settingsMenu;
 
     public void PauseGame() {
         Time.timeScale = 0;
@@ -27,6 +27,7 @@ public class Pause : MonoBehaviour
     public void CancelQuit() {
         menus.SetActive(true);
         quitConfirmation.SetActive(false);
+        settingsMenu.SetActive(false);
     }
     
     public void ActivatePrompt() {
@@ -35,5 +36,10 @@ public class Pause : MonoBehaviour
 
     public void DeactivatePrompt() {
         pauseMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowSettings() {
+        menus.SetActive(false);
+        settingsMenu.SetActive(true);        
     }
 }

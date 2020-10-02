@@ -11,7 +11,7 @@ public class GameOver : MonoBehaviour
 
     public void PrepareRewardedAd() {
         LevelManager.instance.watchAdPrompt.gameObject.SetActive(false);
-        Player.instance.isRespawning = true;
+        // Player.instance.isRespawning = true;
         AdManager.instance.PlayRewardedVideoAd();
     }
 

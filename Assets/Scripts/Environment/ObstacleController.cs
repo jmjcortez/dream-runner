@@ -11,7 +11,7 @@ public class ObstacleController : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player") && !Player.instance.isInvulnerable) {
+        if (other.CompareTag("Player") && !Player.instance.isInvulnerable && !Player.instance.isFrozen) {
             StartCoroutine(LevelManager.instance.HandleGameOver(0));
         }
     }

@@ -74,6 +74,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
             case ShowResult.Finished:
                 if (placementId == rewardedVideoAd) {
                     isRewardVidPlayed = true;
+                    Player.instance.isRespawning = true;
                 }
                 if (placementId == interstitialAd) {
                     WatchedInterstitialAdLogic();
@@ -92,6 +93,7 @@ public class AdManager : MonoBehaviour, IUnityAdsListener
         }
     }
     public void ReloadScene() {
+        Time.timeScale = 1;
         SceneManager.LoadScene("GameScene");
     }
 

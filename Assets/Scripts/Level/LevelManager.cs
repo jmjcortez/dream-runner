@@ -85,21 +85,20 @@ public class LevelManager : MonoBehaviour
 
     public IEnumerator HandleGameOver(int waitTime) {
 
-            if (lives > 0) {
-                yield return new WaitForSeconds(waitTime);
+        if (lives > 0) {
+            yield return new WaitForSeconds(waitTime);
 
-                FreezePlayer(true);
+            FreezePlayer(true);
 
-                // AdManager.instance.PlayRewardedVideoAd();
-                PromptAd();
+            PromptAd();
 
 
-                lives--;
-            }
-            else {
-                FreezePlayer(false);
-                PromptGameOver();
-            }
+            lives--;
+        }
+        else {
+            FreezePlayer(false);
+            PromptGameOver();
+        }
 
  
     }
@@ -107,7 +106,6 @@ public class LevelManager : MonoBehaviour
     public void FreezePlayer(bool isRespawning) {
         Player.instance.playerRigidbody.velocity = new Vector2(0, Player.instance.playerRigidbody.velocity.y);
         Player.instance.isFrozen = true;
-        // Player.instance.isRespawning = isRespawning;
         Player.instance.playerSpriteRenderer.enabled = false;
 
         CameraController.instance.isFollowingTarget = false;
@@ -130,6 +128,7 @@ public class LevelManager : MonoBehaviour
     public void PromptGameOver() {
         UpdateHiScore();
         gameOverPrompt.transform.position = Vector3.MoveTowards(transform.position, gameOverPromptTarget.position, 2 * Time.deltaTime);
+        Time.timeScale = 0;
     }
 
     public void PromptAd() {

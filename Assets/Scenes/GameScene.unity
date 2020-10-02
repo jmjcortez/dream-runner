@@ -1929,6 +1929,7 @@ MonoBehaviour:
   isFrozen: 0
   isRespawning: 0
   isInvulnerable: 0
+  touchedLastFrame: 0
   playerSpriteRenderer: {fileID: 319403169}
 --- !u!1 &323448502
 GameObject:

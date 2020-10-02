@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     public LayerMask ground;
     public Transform groundCheckPoint;
     public Rigidbody2D playerRigidbody;
-    public bool isFrozen, isRespawning, isInvulnerable = false;
+    public bool isFrozen, isRespawning, isInvulnerable = false, touchedLastFrame = false;
 
     public SpriteRenderer playerSpriteRenderer;
 
@@ -73,6 +73,7 @@ public class Player : MonoBehaviour
             groundedRemember = groundedRememberTime;
         }
 
+        #if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBPLAYER
         if (Input.GetButtonDown("Jump")) {
             jumpPressedRemember = jumpPressedRememberTime;
 
@@ -90,6 +91,32 @@ public class Player : MonoBehaviour
             groundedRemember = 0;
             Jump();
         }
+        #endif
+
+        if (touchedLastFrame && Input.touchCount == 0) {
+            touchedLastFrame = false;
+        }
+
+        else if (Input.touchCount > 0 && !touchedLastFrame) {
+            jumpPressedRemember = jumpPressedRememberTime;
+
+            if (!isGrounded && LevelManager.instance.doubleJumpsAvailable > 0) {
+                LevelManager.instance.doubleJumpsAvailable -= 1;
+                LevelManager.instance.UpdateDoubleJumpText();
+                jumpPressedRemember = 0;
+                groundedRemember = 0;
+                Jump();
+            }
+
+            if (jumpPressedRemember > 0 && groundedRemember > 0) {
+                jumpPressedRemember = 0;
+                groundedRemember = 0;
+                Jump();
+            }
+
+            touchedLastFrame = true;
+        }
+
     }
 
     void Jump() {

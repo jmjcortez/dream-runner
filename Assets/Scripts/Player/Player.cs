@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
 
     void Jump() {
         playerRigidbody.velocity = new Vector2(playerRigidbody.velocity.x, jumpPower);
-
+        AudioManager.instance.PlaySFX(3);
     }
 
     void AnimateJump() {   

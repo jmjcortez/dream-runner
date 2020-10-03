@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ButtonController : MonoBehaviour
 {
     public void LoadScene(string loadToString) {
+        Time.timeScale = 1;
         SceneManager.LoadScene(loadToString);
     }
 }

@@ -23,7 +23,7 @@ public class TabGenerator : MonoBehaviour
 
         Vector3 spawnPoint = new Vector3(selectedSpawnPoint.transform.position.x, selectedSpawnPoint.transform.position.y + Random.Range(0,3), selectedSpawnPoint.transform.position.z);
 
-        if (spawnSelect <= chanceToSpawn) {
+        if (spawnSelect <= chanceToSpawn && LevelManager.instance.doubleJumpsAvailable < 5) {
             Instantiate(tab, spawnPoint, selectedSpawnPoint.transform.rotation);
         }
         

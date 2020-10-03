@@ -29,8 +29,10 @@ public class LevelManager : MonoBehaviour
     
     void Start()
     {
+        AudioManager.instance.PlayBGM();
+
         startPosition = player.transform.position;
-        StartCoroutine(PreStartCountdown());        
+        StartCoroutine(PreStartCountdown()); 
     }
 
     void Update()

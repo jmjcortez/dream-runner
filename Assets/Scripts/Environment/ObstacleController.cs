@@ -12,6 +12,7 @@ public class ObstacleController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player") && !Player.instance.isInvulnerable && !Player.instance.isFrozen) {
+            AudioManager.instance.PlaySFX(2);
             StartCoroutine(LevelManager.instance.HandleGameOver(0));
         }
     }

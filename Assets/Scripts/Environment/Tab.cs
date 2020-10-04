@@ -13,6 +13,8 @@ public class Tab : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         
         if (other.CompareTag("Player")) {
+            AudioManager.instance.PlaySFX(1);
+
             LevelManager.instance.doubleJumpsAvailable += 1;
             LevelManager.instance.UpdateDoubleJumpText();
         

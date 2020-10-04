@@ -11,18 +11,23 @@ public class VolumeControl : MonoBehaviour
 
     public bool isMusicSlider;
 
+
+
     private void Start() {
         if (isMusicSlider) {
             slider.value = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+            SetBgmLevel(slider.value);
         }
         else {
             slider.value = PlayerPrefs.GetFloat("SfxVolume", 0.5f);
+            SetSfxLevel(slider.value);
         }
     }
 
     public void SetBgmLevel(float sliderValue) {
         mixer.SetFloat("MusicVol", Mathf.Log10(sliderValue) * 20);
         PlayerPrefs.SetFloat("MusicVolume", sliderValue);
+        
     }
 
     public void SetSfxLevel(float sliderValue) {

@@ -6,6 +6,7 @@ public class TitleScreenManager : MonoBehaviour
 {
     void Start()
     {
-        AudioManager.instance.PlayTitleScreenBgm();        
+        AudioManager.instance.PlayTitleScreenBgm();
+
     }
 }

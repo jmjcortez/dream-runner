@@ -66,16 +66,18 @@ public class LevelManager : MonoBehaviour
 
         centrePrompt.gameObject.SetActive(true);
         centrePrompt.text = "3";
+        AudioManager.instance.PlaySFX(5);
 
         yield return new WaitForSeconds(1);
         centrePrompt.text = "2";
-
+        AudioManager.instance.PlaySFX(5);
 
         yield return new WaitForSeconds(1);
         centrePrompt.text = "1";
-
+        AudioManager.instance.PlaySFX(5);
 
         yield return new WaitForSeconds(1);
+        AudioManager.instance.PlaySFX(5);
         centrePrompt.text = "RUN";
         yield return new WaitForSeconds(1);
         centrePrompt.gameObject.SetActive(false);
